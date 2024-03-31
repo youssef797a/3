@@ -63,12 +63,11 @@ export const register = (user) => async (dispatch) => {
             user,
             config
         );
-        if (response) {
+        if (response.status === 200) {
             dispatch(registerSuccess(response.data));
-			toast.success('register successfull');
-			history.push('/signin');
-			window.location.reload();
-            toast.error('registration failed');
+            toast.success('Registration successful');
+            history.push('/signin');
+            window.location.reload();
         } else {
             dispatch(registerFailure())
         }
@@ -90,14 +89,12 @@ export const singin = (user) => async (dispatch) => {
 			'http://localhost:4002/auth/signin',
 			userData
 		);
-		if (response) {
-			localStorage.setItem('auth', JSON.stringify(response.data));
-			dispatch(loginSuccess(response.data));
-
-			history.push('/dashboard');
-			toast.success('login successfull');
-
-			window.location.reload();
+        if (response.status === 200) {
+            localStorage.setItem('auth', JSON.stringify(response.data));
+            dispatch(loginSuccess(response.data));
+            toast.success('Login successful');
+            history.push('/Dashboard');
+            window.location.reload();
 		} else {
 			dispatch(loginFailure());
 			toast.error('login failed');

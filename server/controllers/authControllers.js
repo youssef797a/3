@@ -7,6 +7,7 @@ const singin = async (req, res) => {
     let { email, password} = req.body;
     try {
         let user = await User.findOne({ email });
+        console.log(user, req.body);
         if (!user) {
             return res.status(400).send('email does not exist');
         }
@@ -27,7 +28,9 @@ const singin = async (req, res) => {
                 });
         });
 
-    } catch (error) {return res.status(400).send('login failed') }
+    } catch (error) {
+        return res.status(400).send('login failed') 
+    }
 };
 
 const register = async (req, res) => {
@@ -42,7 +45,8 @@ const register = async (req, res) => {
         if (!email) return res.status(400).send('email is required');
 
         if (!validator.validate(email)) {
-            return res.status(400).send('email is required');
+            return res.status(400).send('Error creating user');
+
         }
 
         if (!password || password.length < 6) {
@@ -54,14 +58,15 @@ const register = async (req, res) => {
         }
 
 
-        const User = await new User({
+        const user = await new User({
             email, username, password,
         });
 
         await User.save();
         return res.status(200).send(User);
     } catch (error) {
-        return res, statusbar(400).send('Error creating user');
+        return res.status(400).send('Error creating user');
+
     }
 };
 module.exports = {
